@@ -26,8 +26,6 @@
 #include <iomanip>
 #include <numeric>
 #include <string>
-#include <fstream>
-#include <windows.h>
 using namespace std;
 
 int turn = 0;
@@ -147,8 +145,8 @@ string randomBlock(bool forRock)
     }
     else
     {
-        string possibleBlocks[11] = {"h", "p", "r", " ", " ", " ", "^", "v", "<", ">", "#"};
-        return possibleBlocks[rand() % 11];
+        string possibleBlocks[10] = {"h", "p", "r", " ", " ", " ", "^", "v", "<", ">"};
+        return possibleBlocks[rand() % 10];
     }
 }
 
@@ -179,8 +177,7 @@ void dealDamageToZombie(int atk, string zombieName, Zombie zombies[3], int zombi
     }
     else
     {
-        zombies[stoi(zombieName) - 1].setLife(0);
-        // z.setLife(0);
+        z.setLife(0);
         cout << "Alien killed Zombie " << zombieName << endl;
         getch();
     }
@@ -212,25 +209,17 @@ string updateCharacterStats(int rows, int columns, int y, int x, string blocks[5
             alien.setLife(newLife);
             cout << "Alien picks up a health pack, 20 HP!" << endl; // Increase health by 20
         }
-    } 
-    else if (blocks[y][x] == "#") // Decrease the life of a random zombie by 10
-    {
-        cout << "Alien picks up a magic item, dealing 10 damage to a random zombie" << endl;
-        srand(time(NULL));                                                                 // Seed the random number generator
-        int randomZombieIndex = rand() % zombieCount;                                   // Generate a random index for the zombie array
-        dealDamageToZombie(10, to_string(randomZombieIndex + 1), zombies, zombieCount); // Deal 10 damage to the zombie at the random index
     }
     else if (blocks[y][x] == "r")
     {
         alien.setNextMove("");
         blocks[y][x] = randomBlock(true);
         cout << "Alien hits a rock, turn ended!" << endl; // Turn will end if hits the rock
-        removeDotsFromBoard(rows, columns, blocks);
         turn++;
+        removeDotsFromBoard(rows, columns, blocks);
         return "r";
     }
-
-    else if (blocks[y][x] == "1" || blocks[y][x] == "2" || blocks[y][x] == "3") // When alien hits zombie
+    else if (blocks[y][x] == "1" || blocks[y][x] == "2" || blocks[y][x] == "3")
     {
         alien.setNextMove("");
         cout << "Alien hits a zombie, dealing damage to zombie & stop!" << endl;
@@ -345,7 +334,7 @@ void alienMoveUp(int rows, int columns, int y, int x, string blocks[5][19], Alie
     }
 }
 
-void alienMove(int rows, int columns, string blocks[5][19], string command, Alien &alien, Zombie zombies[3], int zombieCount) // Alien move
+void alienMove(int rows, int columns, string blocks[5][19], string command, Alien &alien, Zombie zombies[3], int zombieCount)    //Alien move 
 {
     // Find out where is the alien
     Coordinate alienCoordinate = getAlienCoordinate(rows, columns, blocks);
@@ -353,23 +342,23 @@ void alienMove(int rows, int columns, string blocks[5][19], string command, Alie
 
     if (command == ">")
     {
-        alienMoveRight(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount); // Right
+        alienMoveRight(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount);         //Rigth
     }
     else if (command == "v")
     {
-        alienMoveDown(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount); // Down
+        alienMoveDown(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount);          //Down
     }
     else if (command == "<")
     {
-        alienMoveLeft(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount); // Left
+        alienMoveLeft(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount);          //Left
     }
     else
     {
-        alienMoveUp(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount); // Up
+        alienMoveUp(rows, columns, alienCoordinate.getY(), alienCoordinate.getX(), blocks, alien, zombies, zombieCount);            //Right
     }
 }
 
-bool zombieCanAttackAlien(int alienX, int alienY, int zombieX, int zombieY, int range) // bool to find where zombie can attack zombie or not
+bool zombieCanAttackAlien(int alienX, int alienY, int zombieX, int zombieY, int range)       //bool to find where zombie can attack zombie or not
 {
     int distX = alienX - zombieX;
     int distY = alienY - zombieY;
@@ -391,7 +380,7 @@ bool zombieCanAttackAlien(int alienX, int alienY, int zombieX, int zombieY, int 
     }
 }
 
-void zombieMove(int rows, int columns, int x, int y, string blocks[5][19], Zombie zombie, int zombieName) // To let zombie move
+void zombieMove(int rows, int columns, int x, int y, string blocks[5][19], Zombie zombie, int zombieName)                       //To let zombie move
 {
     // try up, down, left, right in sequence
     if (y != 0 && blocks[y - 1][x] != "1" && blocks[y - 1][x] != "2" && blocks[y - 1][x] != "3" && blocks[y - 1][x] != "A")
@@ -426,7 +415,6 @@ void zombieMove(int rows, int columns, int x, int y, string blocks[5][19], Zombi
 
 int main()
 {
-
     cout << "Default Game Settings" << endl; // Main page
     cout << "------------------------------------------" << endl;
 
@@ -451,7 +439,7 @@ int main()
     cout << "Board Columns : " << dsg2 << endl; // Display
 
     // Zombies
-    int dsg3;              // dsg3 is Zombies
+    int dsg3;              // dsg3 isZombies
     dsg3 = rand() % 3 + 1; // Random it and modulus 3 and + 1 the random generated number of zombies is minimum 1, maximum 3
 
     cout << "Zombie Count  : " << dsg3 << endl // Display
@@ -546,9 +534,8 @@ int main()
     }
 
     int whoseTurn = 0;
-    bool gOver = false;
 
-    while (gOver == false) // while loop for gameplay start here
+    while (true) // while loop for gameplay start here
     {
         system("CLS");
 
@@ -563,7 +550,7 @@ int main()
         }
         cout << "+"; // Add a + behind the "+-" to fancy it
         cout << endl;
-        // Game board
+
         for (int i = 1; i <= dsg1; i++) // row
         {
             if (i < 10)
@@ -620,21 +607,11 @@ int main()
         cout << endl
              << endl;
 
-        cout << "Alien   : Life " << alien.getLife() << ", Attack   " << alien.getAttack() << endl; // To display the details under the game board to show life, attack for alien
+        cout << "Alien   : Life " << alien.getLife() << ", Attack   " << alien.getAttack() << endl;           //To display the details under the game board to show life, attack for alien 
 
         for (int i = 0; i < dsg3; i++)
         {
-            if (zombies[i].getLife() <= 0) // If zombie's life lower of equal to 0, the below part will be shown died.
-            {
-                cout << "Zombie " << i + 1 << ": Life "
-                     << "0" /*zombies[i].getLife() */ << ", Attack  "
-                     << "0" /*zombies[i].getAttack()*/ << ", Range  "
-                     << "0" /*zombies[i].getRange()*/ << " <- Died" << endl;
-            }
-            else
-            {
-                cout << "Zombie " << i + 1 << ": Life " << zombies[i].getLife() << ", Attack  " << zombies[i].getAttack() << ", Range  " << zombies[i].getRange() << endl; // To display the details under the game board to show life, attack for alien
-            }
+            cout << "Zombie " << i + 1 << ": Life " << zombies[i].getLife() << ", Attack  " << zombies[i].getAttack() << ", Range  " << zombies[i].getRange() << endl;   //To display the details under the game board to show life, attack for alien 
         }
 
         cout << endl;
@@ -645,9 +622,6 @@ int main()
         string cmdown = "down";
         string cmleft = "left";
         string cmright = "right";
-        string cmhelp = "help";
-        string cmquit = "quit";
-        string cmsave = "save";
 
         // Means it is alien's turn
         if (turn % (dsg3 + 1) == 0)
@@ -657,111 +631,31 @@ int main()
                 cout << "command > ";
                 cin >> command;
 
-                while (command != cmup && command != cmdown && command != cmleft && command != cmright && command != cmhelp && command != cmquit && command != cmsave) // To determine whether user type in correct or not
+                while (command != cmup && command != cmdown && command != cmleft && command != cmright)         //To determine whether user type in correct or not
                 {
-                    cout << "Please type in a proper input (up, down, left, right, help, quit, save) => ";
+                    cout << "Please type in a proper input (up, down, left, right) => ";
                     cin >> command;
                 }
 
-                if (command == cmhelp) // The command of help list
+                if (command == cmup)
                 {
-                    cout << "Commands" << endl;
-                    cout << "1. up     - Move up." << endl;
-                    cout << "2. down   - Move down." << endl;
-                    cout << "3. left   - Move left." << endl;
-                    cout << "4. right  - Move right." << endl;
-                    cout << "5. arrow  - Change the direction of an arrow." << endl;
-                    cout << "6. help   - Display these user commands." << endl;
-                    cout << "7. save   - Save the game." << endl;
-                    cout << "8. load   - Load a game" << endl;
-                    cout << "9. quit   - Quit the game." << endl;
-                    cout << "Press any key to continue . . . ";
-                    getch();
+                    alien.setNextMove("^");                                                                 //Up
+                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3);
                 }
-
-                if (command == cmquit) // The command when user wanna quit
+                else if (command == cmleft)
                 {
-                    string dui;
-                    cout << "Are you sure? (y/n): ";
-                    cin >> dui;
-                    if (dui == "y")
-                    {
-                        cout << "Goodbye !" << endl;
-                        cout << "Press any key to continue . . . ";
-                        getch();
-                        system("CLS");
-                        main();
-                    }
-                    else if (dui == "n")
-                    {
-                        cout << "command > ";
-                        cin >> command;
-                    }
-                    else
-                    {
-                        while (dui != "y" & dui != "n")
-                        {
-                            cout << "Please type y/n only : ";
-                            cin >> dui;
-                        }
-                    }
+                    alien.setNextMove("<");                                                                  //Left
+                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3);
                 }
-
-                else if (command == cmsave) // The command when user wanna save
-                {
-                    string filename;
-                    getline(cin, command);
-                    cout << "Enter the file name to save the current game (.txt) : ";
-                    getline(cin, filename);
-
-                    ofstream outfile(filename + ".txt"); // Save to a .txt file
-                    outfile << "Alien" << endl;
-                    outfile << "Life:  " << alien.getLife() << endl;
-                    outfile << "Attack:  " << alien.getAttack() << endl;
-                    outfile << endl;
-                    outfile << "Zombies" << endl;
-                    for (int i = 0; i < dsg3; i++)
-                    {
-
-                        outfile << "Zombie " << i + 1 << "" << endl;
-                        outfile << "Life " << zombies[i].getLife() << ", Attack  " << zombies[i].getAttack() << ", Range  " << zombies[i].getRange() << endl
-                                << endl;
-                    }
-
-                    // outfile << "The Alien is at coordinate (" << alienCoord.x << ", " << alienCoord.y << ")" << endl;
-                    outfile << "Game board" << endl;
-                    outfile << "Rows: " << dsg1 << endl;
-                    outfile << "Columns: " << dsg2 << endl
-                            << endl;
-
-                    outfile << "Zombie count: " << dsg3;
-
-                    outfile.close();
-
-                    cout << "File (.txt) saved successfully." << endl;
-                    cout << "Press any key to continue . . . ";
-                    getch();
-                }
-
-                else if (command == cmup) // When Alien pick up the Up direction
-                {
-                    alien.setNextMove("^");
-                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3); // Up
-                }
-                else if (command == cmleft) // When Alien pick up the Left direction
-                {
-                    alien.setNextMove("<");
-                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3); // Left
-                }
-                else if (command == cmright) // When Alien pick up the Right direction
+                else if (command == cmright)
                 {
                     alien.setNextMove(">");
-                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3); // Right
+                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3);               //Right
                 }
-                else if (command == cmdown) // When Alien pick up the Down direction
+                else
                 {
                     alien.setNextMove("v");
-                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3); // Down
+                    alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3);               //Down
                 }
             }
             else
@@ -771,8 +665,7 @@ int main()
                 alienMove(dsg1, dsg2, blocks, alien.getNextMove(), alien, zombies, dsg3);
             }
         }
-
-        else // This is the part where zombie move and attack Alien if is inside range
+        else                                                                                                            //This is the part where zombie move and attack Alien if is inside range
         {
             int zombieTurn = turn % (dsg3 + 1);
             int deadZombies = 0;
@@ -784,47 +677,9 @@ int main()
             if (zombieCanAttackAlien(alienCoord.getX(), alienCoord.getY(), zombieCoord.getX(), zombieCoord.getY(), zombies[zombieTurn - 1].getRange()))
             {
                 cout << "Zombie " << zombieTurn << " is in range to deal " << zombies[zombieTurn - 1].getAttack() << " ATK to Alien." << endl;
-                if (alien.getLife() - zombies[zombieTurn - 1].getAttack() <= 0) // When alien life is 0 or lower than 0, which mean is died
+                if (alien.getLife() - zombies[zombieTurn - 1].getAttack() <= 0)
                 {
-                    cout << endl;
                     cout << "Game over." << endl;
-                    string playAgain;
-                    cout << "Do you wish to play again? (y/n) => ";
-                    cin >> playAgain;
-
-                    if (playAgain == "y") // If user choose y, it will restart
-                    {
-                        system("CLS");
-                        main();
-                    }
-                    else
-                    {
-                        gOver == true;
-                        cout << "Y       Y    OOOOOOO     U       U" << endl;
-                        cout << " Y     Y    O       O    U       U" << endl;
-                        cout << "  Y   Y     O       O    U       U" << endl;
-                        cout << "   Y Y      O       O    U       U" << endl;
-                        cout << "    Y       O       O    U       U" << endl;
-                        cout << "    Y       O       O    U       U" << endl;
-                        cout << "    Y       O       O    U       U" << endl;
-                        cout << "    Y       O       O    U       U" << endl;
-                        cout << "    Y        OOOOOOO      UUUUUUU " << endl;
-
-                        cout << endl;
-
-                        cout << "    L        OOOOOOO      SSSSSSS     EEEEEEE" << endl;
-                        cout << "    L       O       O     S           E" << endl;
-                        cout << "    L       O       O     S           E" << endl;
-                        cout << "    L       O       O     S           E" << endl;
-                        cout << "    L       O       O     SSSSSSS     EEEEEEE" << endl;
-                        cout << "    L       O       O           S     E" << endl;
-                        cout << "    L       O       O           S     E" << endl;
-                        cout << "    L       O       O           S     E" << endl;
-                        cout << "    LLLLLL   OOOOOOO      SSSSSSS     EEEEEEE" << endl;
-
-                        cout << "Press any key to quit the game . . . ";
-                        break;
-                    }
                 }
                 else
                 {
@@ -836,4 +691,6 @@ int main()
         }
     }
 
+    int lllll;
+    cin >> lllll;
 }
