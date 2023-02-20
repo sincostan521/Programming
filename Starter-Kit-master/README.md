@@ -24,7 +24,7 @@ Please provide the user manual on how to use your program.
 5. "A" - Player - Alien itself
 6. " " - Empty space - Nothing
 7. "1"-"3" - Zombie - Zombies
-8. "@" - Magic item - Deal 10 damage to a random zombies
+8. "#" - Magic item - Deal 10 damage to a random zombies
 
 How to play? Type:
 
