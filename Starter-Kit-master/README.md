@@ -26,6 +26,8 @@ Please provide the user manual on how to use your program.
 7. "1"-"3" - Zombie - Zombies
 8. "@" - Magic item - Deal 10 damage to a random zombies
 
+How to play? Type:
+
 1. up - Move Up
 2. down - Move Down
 3. left - Move Left
