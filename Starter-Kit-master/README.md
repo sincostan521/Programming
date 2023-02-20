@@ -3,7 +3,7 @@
 ![Alt text](![Screenshot 2023-02-20 141810](https://user-images.githubusercontent.com/108175607/220026698-0dba9830-f10d-4dfe-a6e7-e68c25af71b8.jpg)
  "a title")
 
-Playlist: [Video Demo] https://youtube.com/playlist?list=PLHnyQ9de_gVoJPu0rF4l9zZJpZMrdI7YJ
+Playlist: [Video Demo] https://www.youtube.com/playlist?list=PLUjz_UuiI3pfJxkhpSvUFXqWpB8OozwRC
 
 ## Compilation Instructions
 
